@@ -159,7 +159,7 @@ func (c *Client) EventHandler(evt interface{}) {
 }
 
 func (c *Client) PostRegisterPaymentRequest() error {
-	var buf = new(bytes.Buffer)
+	var buf = bytes.NewBuffer(nil)
 
 	err := gob.NewEncoder(buf).Encode(c.RequestBody)
 	if err != nil {
@@ -177,7 +177,7 @@ func (c *Client) PostRegisterPaymentRequest() error {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != 201 {
+	if res.StatusCode != 204 {
 		return errors.New(fmt.Sprintf("Status Code: %d", res.StatusCode))
 	}
 	return nil
