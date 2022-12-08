@@ -40,7 +40,7 @@ services:
       - POSTGRES_DB=payments-hbtn
     volumes:
       - ./backend/db:/docker-entrypoint-initdb.d/
-      - /data/pago_holberton/postgres:/var/lib/postgresql/data
+      - /data/hbtn-payments/postgres:/var/lib/postgresql/data
 
   hbtn-payments-backend:
     build: ./backend
@@ -60,9 +60,9 @@ services:
       - REGISTER_PAYMENT_PATH=/payment
       - GET_SUMMARY_PATH=/payments
       - EMAIL_PWD=${EMAIL_APP_PWD}
-      - RECEIPTS_FOLDER_PATH=/data/pago_holberton/receipts
+      - RECEIPTS_FOLDER_PATH=/data/hbtn-payments/receipts
     volumes:
-      - /data/pago_holberton/receipts:/data/pago_holberton/receipts
+      - /data/hbtn-payments/receipts:/data/hbtn-payments/receipts
 
   ### ADMINER ###
   hbtn-payments-adminer:
@@ -74,15 +74,3 @@ services:
     environment:
       - ADMINER_DESIGN=nette
       - ADMINER_DEFAULT_SERVER=hbtn-payments-backend-postgres
-
-  ### FILE SERVER ###
-  hbtn-payments-file-server:
-    build: ./file_server
-    restart: always
-    ports:
-      - 6969:5000
-    environment:
-      - PORT=5000
-      - RECEIPTS_FOLDER_PATH=/data/pago_holberton/receipts
-    volumes:
-      - /data/pago_holberton/receipts:/data/pago_holberton/receipts
