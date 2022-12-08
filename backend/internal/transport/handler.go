@@ -33,7 +33,7 @@ func (h *handler) RegisterPayment(w http.ResponseWriter, r *http.Request) {
 
 	err := gob.NewDecoder(r.Body).Decode(req)
 	if err != nil {
-		h.logger.Error("hanlder.go", "RegisterPayment", "error decoding http request body")
+		h.logger.Error("handler.go", "RegisterPayment", "error decoding http request body")
 		statusCode, body := errors.CreateResponse(errors.NewBadRequest("bad request: decoding body"))
 		makeHttpRensponse(w, statusCode, body)
 		return
@@ -41,7 +41,7 @@ func (h *handler) RegisterPayment(w http.ResponseWriter, r *http.Request) {
 
 	err = h.service.RegisterPayment(req)
 	if err != nil {
-		h.logger.Error("hanlder.go", "RegisterPayment", err.Error())
+		h.logger.Error("handler.go", "RegisterPayment", err.Error())
 		statusCode, body := errors.CreateResponse(err)
 		makeHttpRensponse(w, statusCode, body)
 		return
