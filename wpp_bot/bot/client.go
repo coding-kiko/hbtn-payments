@@ -161,8 +161,6 @@ func (c *Client) EventHandler(evt interface{}) {
 func (c *Client) PostRegisterPaymentRequest() error {
 	var buf = new(bytes.Buffer)
 
-	c.SendMessage(c.RequestBody.ReceiptBASE64)
-
 	err := gob.NewEncoder(buf).Encode(c.RequestBody)
 	if err != nil {
 		return err

@@ -1,0 +1,70 @@
+version: '3'
+services:
+  ##### BOT ####
+  hbtn-payments-wpp-bot:
+    build: ./hbtn-payments-wpp-bot
+    container_name: hbtn-payments-wpp-bot
+    restart: always
+    environment:
+      - DB_USER=kiko
+      - DB_PASSWORD=${SECRET}
+      - GROUP_JID=120363046897347696@g.us
+      - BACKEND_URI=http://hbtn-payments-backend:5000
+      - REGISTER_PAYMENT_PATH=/payment
+      - GET_SUMMARY_PATH=/payments
+
+  hbtn-payments-wpp-bot-db:
+    image: arm64v8/postgres:latest
+    container_name: hbtn-payments-wpp-bot-db
+    restart: always
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_USER=kiko
+      - POSTGRES_DB=devices
+      - POSTGRES_PASSWORD=${SECRET}
+    volumes:
+      - /data/wpp-bot:/var/lib/postgresql/data
+  
+  hbtn-payments-wpp-bot-db-adminer:
+      image: arm64v8/adminer:latest
+      restart: always
+      container_name: hbtn-payments-wpp-bot-db-adminer
+      ports:
+        - 8888:8080
+      environment:
+        - ADMINER_DESIGN=nette
+        - ADMINER_DEFAULT_SERVER=hbtn-payments-wpp-bot-db
+
+  ### BACKEND ###
+  hbtn-payments-backend-postgres:
+    image: arm64v8/postgres:latest
+    container_name: hbtn-payments-backend-postgres
+    restart: always
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_USER=kiko
+      - POSTGRES_PASSWORD=${SECRET}
+      - POSTGRES_DB=payments-hbtn
+    volumes:
+      - ./backend/db:/docker-entrypoint-initdb.d/
+      - /data/pago_holberton/postgres:/var/lib/postgresql/data
+
+  hbtn-payments-backend:
+    build: ./backend
+    container_name: hbtn-payments-backend
+    restart: always
+    expose:
+      - "5000"
+    environment:
+      - POSTGRES_HOST=hbtn-payments-backend-postgres
+      - POSTGRES_DB=payments-hbtn
+      - POSTGRES_USER=kiko
+      - POSTGRES_PORT=5432
+      - POSTGRES_PWD=${SECRET}
+      - API_PORT=5000
+      - REGISTER_PAYMENT_PATH=/payment
+      - GET_SUMMARY_PATH=/payments
+      - EMAIL_PWD=${EMAIL_APP_PWD}
+      - RECEIPTS_FOLDER_PATH=/data/pago_holberton/receipts
