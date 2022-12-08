@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/h2non/filetype"
+
 	"control-pago-backend/internal/entity"
 	"control-pago-backend/internal/errors"
 )
 
 func (s *service) RegisterPayment(req *entity.RegisterPaymentRequest) error {
-	var receiptBase64 = req.Receipt
+	receiptBase64 := req.Receipt
 
 	// Decode receipt
 	content, err := enc.StdEncoding.DecodeString(receiptBase64)
@@ -21,12 +23,12 @@ func (s *service) RegisterPayment(req *entity.RegisterPaymentRequest) error {
 	}
 
 	// generate link name
-	// ext, err := filetype.Match(content)
-	// if err != nil {
-	// 	s.logger.Error("register_payment.go", "RegisterPayment", err.Error())
-	// 	return errors.NewFileError("Error getting file extension")
-	// }
-	fileName := generateReceiptFileName(receiptBase64[:8], req.Month, "jpg")
+	ext, err := filetype.Match(content)
+	if err != nil {
+		s.logger.Error("register_payment.go", "RegisterPayment", err.Error())
+		return errors.NewFileError("Error getting file extension")
+	}
+	fileName := generateReceiptFileName(receiptBase64[:8], req.Month, ext.Extension)
 
 	receipt := entity.Receipt{
 		Name: fileName,
