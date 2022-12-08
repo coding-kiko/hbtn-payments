@@ -41,6 +41,7 @@ func (h *handler) RegisterPayment(w http.ResponseWriter, r *http.Request) {
 
 	err = h.service.RegisterPayment(req)
 	if err != nil {
+		h.logger.Error("hanlder.go", "RegisterPayment", err.Error())
 		statusCode, body := errors.CreateResponse(err)
 		makeHttpRensponse(w, statusCode, body)
 		return

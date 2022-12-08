@@ -18,12 +18,14 @@ func (s *service) RegisterPayment(req *entity.RegisterPaymentRequest) error {
 	// Decode receipt
 	content, err := enc.StdEncoding.DecodeString(receiptBase64)
 	if err != nil {
+		s.logger.Error("service.go", "RegisterPayment", err.Error())
 		return errors.NewFileError("Error decoding base64 file string")
 	}
 
 	// generate link name
 	ext, err := filetype.Match(content)
 	if err != nil {
+		s.logger.Error("service.go", "RegisterPayment", err.Error())
 		return errors.NewFileError("Error getting file extension")
 	}
 	fileName := generateReceiptFileName(receiptBase64[:8], req.Month, ext.Extension)
@@ -36,12 +38,21 @@ func (s *service) RegisterPayment(req *entity.RegisterPaymentRequest) error {
 	// store receipt disk
 	err = s.Repo.StoreReceipt(receipt)
 	if err != nil {
+		s.logger.Error("service.go", "RegisterPayment", err.Error())
 		return err
 	}
 
+	req.Receipt = fileName
 	// register payment psql
+	err = s.Repo.RegisterPayment(req)
+	if err != nil {
+		s.logger.Error("service.go", "RegisterPayment", err.Error())
+		return err
+	}
+
 	err = s.EmailClient.SendReceipt(req.EmailTo, receiptBase64, req.Month)
 	if err != nil {
+		s.logger.Error("service.go", "RegisterPayment", err.Error())
 		return err
 	}
 

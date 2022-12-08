@@ -48,12 +48,14 @@ func (r *repository) RegisterPayment(pmt *entity.RegisterPaymentRequest) error {
 func (r *repository) StoreReceipt(receipt entity.Receipt) error {
 	f, err := os.Create(fmt.Sprintf("%s/%s", r.receiptsFolder, receipt.Name))
 	if err != nil {
+		r.logger.Error("repository.go", "StoreReceipt", err.Error())
 		return errors.NewFileError("Error creating file")
 	}
 	defer f.Close()
 
 	_, err = f.Write(receipt.Data)
 	if err != nil {
+		r.logger.Error("repository.go", "StoreReceipt", err.Error())
 		return errors.NewFileError("Error writing content to file")
 	}
 

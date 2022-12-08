@@ -69,3 +69,5 @@ services:
       - GET_SUMMARY_PATH=/payments
       - EMAIL_PWD=${EMAIL_APP_PWD}
       - RECEIPTS_FOLDER_PATH=/data/pago_holberton/receipts
+    volumes:
+      - /data/pago_holberton/receipts:/data/pago_holberton/receipts
