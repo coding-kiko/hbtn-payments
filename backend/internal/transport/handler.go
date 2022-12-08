@@ -5,8 +5,7 @@ import (
 	"control-pago-backend/internal/errors"
 	"control-pago-backend/internal/service"
 	"control-pago-backend/log"
-	"encoding/gob"
-	"fmt"
+	"encoding/json"
 	"net/http"
 )
 
@@ -32,7 +31,7 @@ func NewHandler(srv service.Service, lgr log.Logger) Handler {
 func (h *handler) RegisterPayment(w http.ResponseWriter, r *http.Request) {
 	req := new(entity.RegisterPaymentRequest)
 
-	err := gob.NewDecoder(r.Body).Decode(req)
+	err := json.NewDecoder(r.Body).Decode(req)
 	if err != nil {
 		h.logger.Error("handler.go", "RegisterPayment", err.Error())
 		statusCode, body := errors.CreateResponse(errors.NewBadRequest("bad request: decoding body"))
@@ -40,7 +39,6 @@ func (h *handler) RegisterPayment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(req)
 	err = h.service.RegisterPayment(req)
 	if err != nil {
 		h.logger.Error("handler.go", "RegisterPayment", err.Error())
@@ -62,5 +60,5 @@ func (h *handler) MethodNotAllowedHandler() http.Handler {
 
 func makeHttpRensponse(w http.ResponseWriter, statusCode int, body errors.Response) {
 	w.WriteHeader(statusCode)
-	gob.NewEncoder(w).Encode(body)
+	json.NewEncoder(w).Encode(body)
 }

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	encoding "encoding/base64"
-	"encoding/gob"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -104,9 +103,9 @@ func (c *Client) EventHandler(evt interface{}) {
 			}
 
 			if email == "default" {
-				c.RequestBody.Emailto = "mvd-accounting@holbertonschool.com"
+				c.RequestBody.EmailTo = "mvd-accounting@holbertonschool.com"
 			} else {
-				c.RequestBody.Emailto = email
+				c.RequestBody.EmailTo = email
 			}
 
 			c.SendMessage("<BOT> Indicate company [default=undisclosed]:")
@@ -161,7 +160,7 @@ func (c *Client) EventHandler(evt interface{}) {
 func (c *Client) PostRegisterPaymentRequest() error {
 	var buf = bytes.NewBuffer(nil)
 
-	err := gob.NewEncoder(buf).Encode(c.RequestBody)
+	err := json.NewEncoder(buf).Encode(c.RequestBody)
 	if err != nil {
 		return err
 	}
