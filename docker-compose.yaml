@@ -2,7 +2,7 @@ version: '3'
 services:
   ##### BOT ####
   hbtn-payments-wpp-bot:
-    build: ./hbtn-payments-wpp-bot
+    build: ./wpp_bot
     container_name: hbtn-payments-wpp-bot
     restart: always
     environment:
