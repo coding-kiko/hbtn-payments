@@ -6,6 +6,7 @@ import (
 	"control-pago-backend/internal/service"
 	"control-pago-backend/log"
 	"encoding/gob"
+	"fmt"
 	"net/http"
 )
 
@@ -39,6 +40,7 @@ func (h *handler) RegisterPayment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(req)
 	err = h.service.RegisterPayment(req)
 	if err != nil {
 		h.logger.Error("handler.go", "RegisterPayment", err.Error())
