@@ -13,7 +13,7 @@ import (
 )
 
 func (s *service) RegisterPayment(req *entity.RegisterPaymentRequest) error {
-	receiptBase64 := req.Receipt
+	var receiptBase64 string = req.Receipt[:len(req.Receipt)]
 
 	// Decode receipt
 	content, err := enc.StdEncoding.DecodeString(receiptBase64)
