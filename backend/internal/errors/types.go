@@ -76,3 +76,20 @@ func NewBadRequest(msg ...string) *BadRequest {
 	}
 	return &BadRequest{Err: errors.New(msg[0])}
 }
+
+// bad request
+type InternalServer struct {
+	Err error
+}
+
+func (e *InternalServer) Error() string {
+	return fmt.Sprintf("%v", e.Err)
+}
+
+func NewInternalServer(msg ...string) *InternalServer {
+	defaultMsg := "internal server error"
+	if len(msg) == 0 {
+		return &InternalServer{Err: errors.New(defaultMsg)}
+	}
+	return &InternalServer{Err: errors.New(msg[0])}
+}

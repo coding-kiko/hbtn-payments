@@ -37,7 +37,7 @@ func (e *emailClient) SendReceipt(to, receiptBase64, month string) error {
 	content := makeEmailContent(receiptBase64, month)
 	err := smtp.SendMail(e.SmtpAddr, *e.Auth, e.From, []string{to}, content)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error sending email to %s", to))
+		return errors.NewInternalServer(fmt.Sprintf("Error sending email to %s", to))
 	}
 	return nil
 }
