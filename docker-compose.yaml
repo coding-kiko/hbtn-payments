@@ -48,6 +48,8 @@ services:
     restart: always
     expose:
       - "5000"
+    ports:
+      - 4566:5000
     environment:
       - POSTGRES_HOST=hbtn-payments-backend-postgres
       - POSTGRES_DB=payments-hbtn
