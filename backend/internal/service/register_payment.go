@@ -13,11 +13,8 @@ import (
 )
 
 func (s *service) RegisterPayment(req *entity.RegisterPaymentRequest) error {
-	var receiptBase64 string = req.Receipt[:len(req.Receipt)]
-	s.logger.Debug(receiptBase64)
-
 	// Decode receipt
-	content, err := enc.StdEncoding.DecodeString(receiptBase64)
+	content, err := enc.StdEncoding.DecodeString(req.ReceiptBase64)
 	if err != nil {
 		s.logger.Error("register_payment.go", "RegisterPayment", err.Error())
 		return errors.NewFileError("Error decoding base64 file string")
@@ -29,7 +26,7 @@ func (s *service) RegisterPayment(req *entity.RegisterPaymentRequest) error {
 		s.logger.Error("register_payment.go", "RegisterPayment", err.Error())
 		return errors.NewFileError("Error getting file extension")
 	}
-	fileName := generateReceiptFileName(receiptBase64[:8], req.Month, ext.Extension)
+	fileName := generateReceiptFileName(req.ReceiptBase64[:8], req.Month, ext.Extension)
 
 	receipt := entity.Receipt{
 		Name: fileName,
@@ -43,15 +40,21 @@ func (s *service) RegisterPayment(req *entity.RegisterPaymentRequest) error {
 		return err
 	}
 
-	req.Receipt = fileName
+	pmt := &entity.RegisterPayment{
+		Month:   req.Month,
+		Company: req.Company,
+		Receipt: fileName,
+		Amount:  req.Amount,
+	}
+
 	// register payment psql
-	err = s.Repo.RegisterPayment(req)
+	err = s.Repo.RegisterPayment(pmt)
 	if err != nil {
 		s.logger.Error("register_payment.go", "RegisterPayment", err.Error())
 		return err
 	}
 
-	err = s.EmailClient.SendReceipt(req.EmailTo, receiptBase64, req.Month)
+	err = s.EmailClient.SendReceipt(req.EmailTo, req.ReceiptBase64, req.Month)
 	if err != nil {
 		s.logger.Error("register_payment.go", "RegisterPayment", err.Error())
 		return err

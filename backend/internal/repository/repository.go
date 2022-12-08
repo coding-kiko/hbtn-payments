@@ -11,7 +11,7 @@ import (
 )
 
 type Repository interface {
-	RegisterPayment(pmt *entity.RegisterPaymentRequest) error
+	RegisterPayment(pmt *entity.RegisterPayment) error
 	StoreReceipt(receipt entity.Receipt) error
 	// GetPayments()
 }
@@ -29,7 +29,7 @@ type repository struct {
 	receiptsFolder string
 }
 
-func (r *repository) RegisterPayment(pmt *entity.RegisterPaymentRequest) error {
+func (r *repository) RegisterPayment(pmt *entity.RegisterPayment) error {
 	if pmt.Company == nil {
 		_, err := r.db.Exec(registerPaymentQueryWithoutCompany, pmt.Month, pmt.Amount, pmt.Receipt)
 		if err != nil {
