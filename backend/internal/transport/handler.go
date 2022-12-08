@@ -34,7 +34,7 @@ func (h *handler) RegisterPayment(w http.ResponseWriter, r *http.Request) {
 
 	err := gob.NewDecoder(r.Body).Decode(req)
 	if err != nil {
-		h.logger.Error("handler.go", "RegisterPayment", "error decoding http request body")
+		h.logger.Error("handler.go", "RegisterPayment", err.Error())
 		statusCode, body := errors.CreateResponse(errors.NewBadRequest("bad request: decoding body"))
 		makeHttpRensponse(w, statusCode, body)
 		return
