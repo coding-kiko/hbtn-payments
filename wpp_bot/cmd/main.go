@@ -15,11 +15,12 @@ func main() {
 	GroupId := os.Getenv("GROUP_JID")
 	dbUser := os.Getenv("DB_USER")
 	dbPwd := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
 	backendUri := os.Getenv("BACKEND_URI")
 	registerPaymentPath := os.Getenv("REGISTER_PAYMENT_PATH")
 	getSummaryPath := os.Getenv("GET_SUMMARY_PATH")
 
-	conn := bot.NewWppClientConn(dbUser, dbPwd)
+	conn := bot.NewWppClientConn(dbUser, dbPwd, dbHost)
 
 	registerPaymentUri := backendUri + registerPaymentPath
 	getSummaryUri := backendUri + getSummaryPath

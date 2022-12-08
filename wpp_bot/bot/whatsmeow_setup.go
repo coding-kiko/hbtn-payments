@@ -11,9 +11,9 @@ import (
 	"go.mau.fi/whatsmeow/store/sqlstore"
 )
 
-func NewWppClientConn(dbUser, dbPwd string) *whatsmeow.Client {
+func NewWppClientConn(dbUser, dbPwd, dbHost string) *whatsmeow.Client {
 	// dbLog := waLog.Stdout("Database", "DEBUG", true)
-	connString := fmt.Sprintf("postgres://%s:%s@wpp_bot_db:5432/devices?sslmode=disable", dbUser, dbPwd)
+	connString := fmt.Sprintf("postgres://%s:%s@%s:5432/devices?sslmode=disable", dbUser, dbPwd, dbHost)
 	container, err := sqlstore.New("postgres", connString, nil)
 	if err != nil {
 		panic(err)
