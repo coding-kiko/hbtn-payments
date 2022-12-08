@@ -7,7 +7,7 @@ type GetPaymentSummaryResponse struct {
 type ReqBody struct {
 	Month         string  `json:"month"`
 	Amount        int     `json:"amount"`
-	Email         string  `json:"emailto,omitempty"`
-	Company       *string `json:"company,omitempty"`
+	Emailto       string  `json:"emailto`
+	Company       *string `json:"company"`
 	ReceiptBASE64 string  `json:"receipt"`
 }

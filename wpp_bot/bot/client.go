@@ -104,9 +104,9 @@ func (c *Client) EventHandler(evt interface{}) {
 			}
 
 			if email == "default" {
-				c.RequestBody.Email = "mvd-accounting@holbertonschool.com"
+				c.RequestBody.Emailto = "mvd-accounting@holbertonschool.com"
 			} else {
-				c.RequestBody.Email = email
+				c.RequestBody.Emailto = email
 			}
 
 			c.SendMessage("<BOT> Indicate company [default=undisclosed]:")

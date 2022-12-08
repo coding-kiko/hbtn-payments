@@ -17,7 +17,6 @@ type RegisterPayment struct {
 	Amount  int
 	Receipt string
 	Company *string
-	EmailTo string
 }
 
 type Receipt struct {
