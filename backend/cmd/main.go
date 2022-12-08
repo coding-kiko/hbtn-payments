@@ -8,6 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	_ "github.com/lib/pq"
+
 	"control-pago-backend/internal/email"
 	"control-pago-backend/internal/repository"
 	"control-pago-backend/internal/service"
