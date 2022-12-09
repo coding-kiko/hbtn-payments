@@ -54,7 +54,12 @@ func (s *service) RegisterPayment(req *entity.RegisterPaymentRequest) error {
 		return err
 	}
 
-	err = s.EmailClient.SendReceipt(req.EmailTo, req.ReceiptBase64, req.Month)
+	if req.EmailTo == nil {
+		s.logger.Info("register_payment.go", "RegisterPayment", "Returning without sending email")
+		return nil
+	}
+
+	err = s.EmailClient.SendReceipt(*req.EmailTo, req.ReceiptBase64, req.Month)
 	if err != nil {
 		s.logger.Error("register_payment.go", "RegisterPayment", err.Error())
 		return err
@@ -64,7 +69,7 @@ func (s *service) RegisterPayment(req *entity.RegisterPaymentRequest) error {
 }
 
 // concatenate current time, an arbitrary chunk of the base64 encrypted file and the month
-// then hash it with md5 to produce a random string that will be the file name
+// then hash it with md5 to produce a random string that will be the file name; then add extension
 func generateReceiptFileName(receiptChunk, month, extension string) string {
 	now := time.Now().String()
 

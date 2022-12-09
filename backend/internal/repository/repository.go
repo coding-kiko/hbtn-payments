@@ -17,10 +17,8 @@ type Repository interface {
 }
 
 var (
-	registerPaymentQueryWithCompany = `INSERT INTO payments(month, amount, receipt_url, company)
+	registerPaymentQuery = `INSERT INTO payments(month, amount, receipt_url, company)
 										VALUES($1, $2, $3, $4)`
-	registerPaymentQueryWithoutCompany = `INSERT INTO payments(month, amount, receipt_url)
-										VALUES($1, $2, $3)`
 )
 
 type repository struct {
@@ -30,16 +28,10 @@ type repository struct {
 }
 
 func (r *repository) RegisterPayment(pmt *entity.RegisterPayment) error {
-	if pmt.Company == nil {
-		_, err := r.db.Exec(registerPaymentQueryWithoutCompany, pmt.Month, pmt.Amount, pmt.Receipt)
-		if err != nil {
-			return err
-		}
-	} else {
-		_, err := r.db.Exec(registerPaymentQueryWithCompany, pmt.Month, pmt.Amount, pmt.Receipt, pmt.Company)
-		if err != nil {
-			return err
-		}
+
+	_, err := r.db.Exec(registerPaymentQuery, pmt.Month, pmt.Amount, pmt.Receipt)
+	if err != nil {
+		return err
 	}
 
 	return nil

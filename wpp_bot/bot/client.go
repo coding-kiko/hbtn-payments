@@ -92,23 +92,28 @@ func (c *Client) EventHandler(evt interface{}) {
 			}
 			c.RequestBody.Month = month
 
-			c.SendMessage("<BOT> Indicate email receiver [default=mvd-accounting@holbertonschool.com]:")
+			c.SendMessage("<BOT> Indicate email receiver [default=mvd-accounting@holbertonschool.com | none='dont send email']:")
 			c.stage = 3
 			return
 		}
 		if c.stage == 3 && v.Info.Chat == c.groupJId {
+			var defaultEmail = "mvd-accounting@holbertonschool.com"
+
 			email := v.Message.GetConversation()
 			if messageIsFromBot(email) {
 				return
 			}
 
-			if email == "default" {
-				c.RequestBody.EmailTo = "mvd-accounting@holbertonschool.com"
-			} else {
-				c.RequestBody.EmailTo = email
+			switch {
+			case email == "default":
+				c.RequestBody.EmailTo = &defaultEmail
+			case email == "none":
+				c.RequestBody.EmailTo = nil
+			default:
+				c.RequestBody.EmailTo = &email
 			}
 
-			c.SendMessage("<BOT> Indicate company [default=undisclosed]:")
+			c.SendMessage("<BOT> Indicate company [none=undisclosed]:")
 			c.stage = 4
 			return
 		}
@@ -118,10 +123,10 @@ func (c *Client) EventHandler(evt interface{}) {
 				return
 			}
 
-			if company != "default" {
-				c.RequestBody.Company = &company
+			if company == "none" {
+				c.RequestBody.Company = "N/A"
 			} else {
-				c.RequestBody.Company = nil
+				c.RequestBody.Company = company
 			}
 
 			c.SendMessage("<BOT> Insert image of the receipt:")
@@ -150,7 +155,11 @@ func (c *Client) EventHandler(evt interface{}) {
 				return
 			}
 
-			c.SendMessage("<BOT> The payment has been registered and an email has been sent.")
+			if c.RequestBody.EmailTo == nil {
+				c.SendMessage("<BOT> The payment has been registered.")
+			} else {
+				c.SendMessage("<BOT> The payment has been registered and an email has been sent.")
+			}
 			c.stage = 0
 			return
 		}

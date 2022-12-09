@@ -8,15 +8,15 @@ type RegisterPaymentRequest struct {
 	Month         string  `json:"month"`
 	Amount        int     `json:"amount"`
 	ReceiptBase64 string  `json:"receipt"`
-	Company       *string `json:"company,omitempty"`
-	EmailTo       string  `json:"emailto"`
+	Company       string  `json:"company"`
+	EmailTo       *string `json:"emailto,omitempty"`
 }
 
 type RegisterPayment struct {
 	Month   string
 	Amount  int
 	Receipt string
-	Company *string
+	Company string
 }
 
 type Receipt struct {
