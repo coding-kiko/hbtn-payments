@@ -14,7 +14,7 @@ func (s *service) GetSummary() (*entity.GetSummaryResponse, error) {
 		return nil, err
 	}
 
-	summaryBase64, err := GenerateHtmlSummaryBase64(payments)
+	summaryBase64, err := GenerateHtmlSummaryBase64(payments, s.StaticServerBaseUrl)
 	if err != nil {
 		s.logger.Error("get_summay.go", "GetSummary", err.Error())
 		return nil, err
@@ -27,12 +27,12 @@ func (s *service) GetSummary() (*entity.GetSummaryResponse, error) {
 	return res, nil
 }
 
-func GenerateHtmlSummaryBase64(payments []entity.Payment) (string, error) {
+func GenerateHtmlSummaryBase64(payments []entity.Payment, staticServerBaseUrl string) (string, error) {
 	var file = bytes.NewBuffer(nil)
 
 	file.WriteString(fixedTop)
 	for _, payment := range payments {
-		row := fmt.Sprintf(dynamicRow, payment.Month, payment.Amount, payment.Company, payment.Receipt)
+		row := fmt.Sprintf(dynamicRow, payment.Month, payment.Amount, payment.Company, staticServerBaseUrl+payment.Receipt)
 		file.WriteString(row)
 	}
 	file.WriteString(fixedBot)
@@ -95,6 +95,6 @@ var fixedBot = `		</tbody>
 var dynamicRow = `<tr>
 					<td>%s</td>
 					<td>%d</td>
-					<td>%d</td>
+					<td>%s</td>
 					<td><a href="%s">view</td>
 				   </tr>`
