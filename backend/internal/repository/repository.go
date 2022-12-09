@@ -29,7 +29,7 @@ type repository struct {
 
 func (r *repository) RegisterPayment(pmt *entity.RegisterPayment) error {
 
-	_, err := r.db.Exec(registerPaymentQuery, pmt.Month, pmt.Amount, pmt.Receipt)
+	_, err := r.db.Exec(registerPaymentQuery, pmt.Month, pmt.Amount, pmt.Receipt, pmt.Company)
 	if err != nil {
 		return err
 	}
