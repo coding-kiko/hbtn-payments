@@ -61,7 +61,7 @@ services:
       - GET_SUMMARY_PATH=/payments
       - EMAIL_PWD=${EMAIL_APP_PWD}
       - RECEIPTS_FOLDER_PATH=/data/hbtn-payments/receipts
-      - STATIC_SERVER_BASE_URL=static.francisco-calixto.com/hbtn-payments/receipts/
+      - STATIC_SERVER_BASE_URL=https://static.francisco-calixto.com/hbtn-payments/receipts/
     volumes:
       - /data/hbtn-payments/receipts:/data/hbtn-payments/receipts
 
