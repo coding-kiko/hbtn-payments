@@ -40,11 +40,10 @@ func (h *handler) GetSummary(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(res)
 	if err != nil {
 		h.logger.Error("handler.go", "RegisterPayment", err.Error())
-		statusCode, body := errors.CreateResponse(errors.NewBadRequest("bad request: decoding body"))
+		statusCode, body := errors.CreateResponse(errors.NewInternalServer("Error encoding response"))
 		makeHttpRensponse(w, statusCode, body)
 		return
 	}
-	w.WriteHeader(200)
 }
 
 func (h *handler) RegisterPayment(w http.ResponseWriter, r *http.Request) {
