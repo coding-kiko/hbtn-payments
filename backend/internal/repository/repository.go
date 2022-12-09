@@ -37,7 +37,7 @@ func (r *repository) GetPayments() ([]entity.Payment, error) {
 	}
 	for rows.Next() {
 		var payment = entity.Payment{}
-		err := rows.Scan(&payment)
+		err := rows.Scan(&payment.Month, &payment.Amount, &payment.Receipt, &payment.Company)
 		if err != nil {
 			return nil, err
 		}
