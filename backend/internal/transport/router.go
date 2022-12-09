@@ -11,7 +11,7 @@ func NewRouter(handler Handler, registerPaymentPath, getSummaryPath string, logg
 	logger.Info("router.go", "NewRouter", "Initializing handlers")
 
 	router.Path(registerPaymentPath).Methods("POST").HandlerFunc(handler.RegisterPayment)
-	// router.Path(getSummaryPath).Methods("GET").HandlerFunc(handler.GetSummary)
+	router.Path(getSummaryPath).Methods("GET").HandlerFunc(handler.GetSummary)
 
 	// override default gorilla 405 handler
 	router.MethodNotAllowedHandler = handler.MethodNotAllowedHandler()

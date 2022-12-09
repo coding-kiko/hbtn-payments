@@ -19,6 +19,13 @@ type RegisterPayment struct {
 	Company string
 }
 
+type Payment struct {
+	Month   string
+	Amount  int
+	Receipt string
+	Company string
+}
+
 type Receipt struct {
 	Name string
 	Data []byte

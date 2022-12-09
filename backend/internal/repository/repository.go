@@ -13,12 +13,13 @@ import (
 type Repository interface {
 	RegisterPayment(pmt *entity.RegisterPayment) error
 	StoreReceipt(receipt entity.Receipt) error
-	// GetPayments()
+	GetPayments() ([]entity.Payment, error)
 }
 
 var (
 	registerPaymentQuery = `INSERT INTO payments(month, amount, receipt_url, company)
 										VALUES($1, $2, $3, $4)`
+	getPaymentsQuery = `SELECT month, amount, receipt_url, company FROM payments`
 )
 
 type repository struct {
@@ -27,10 +28,30 @@ type repository struct {
 	receiptsFolder string
 }
 
+func (r *repository) GetPayments() ([]entity.Payment, error) {
+	var res = []entity.Payment{}
+
+	rows, err := r.db.Query(getPaymentsQuery)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var payment = entity.Payment{}
+		err := rows.Scan(&payment)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, payment)
+		fmt.Println(payment)
+	}
+	return res, nil
+}
+
 func (r *repository) RegisterPayment(pmt *entity.RegisterPayment) error {
 
 	_, err := r.db.Exec(registerPaymentQuery, pmt.Month, pmt.Amount, pmt.Receipt, pmt.Company)
 	if err != nil {
+		r.logger.Error("repository.go", "RegisterPayment", err.Error())
 		return err
 	}
 

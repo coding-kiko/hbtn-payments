@@ -9,18 +9,21 @@ import (
 
 type Service interface {
 	RegisterPayment(req *entity.RegisterPaymentRequest) error
+	GetSummary() (*entity.GetSummaryResponse, error)
 }
 
 type service struct {
-	Repo        repository.Repository
-	logger      log.Logger
-	EmailClient email.EmailClient
+	logger              log.Logger
+	Repo                repository.Repository
+	EmailClient         email.EmailClient
+	StaticServerBaseUrl string
 }
 
-func NewService(emailClient email.EmailClient, lgr log.Logger, repo repository.Repository) Service {
+func NewService(emailClient email.EmailClient, lgr log.Logger, repo repository.Repository, staticServerBaseUrl string) Service {
 	return &service{
-		Repo:        repo,
-		EmailClient: emailClient,
-		logger:      lgr,
+		Repo:                repo,
+		EmailClient:         emailClient,
+		logger:              lgr,
+		StaticServerBaseUrl: staticServerBaseUrl,
 	}
 }

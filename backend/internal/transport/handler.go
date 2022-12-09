@@ -16,7 +16,7 @@ type handler struct {
 
 type Handler interface {
 	RegisterPayment(w http.ResponseWriter, r *http.Request)
-	// GetSummary(w http.ResponseWriter, r *http.Request)
+	GetSummary(w http.ResponseWriter, r *http.Request)
 
 	MethodNotAllowedHandler() http.Handler
 }
@@ -26,6 +26,25 @@ func NewHandler(srv service.Service, lgr log.Logger) Handler {
 		service: srv,
 		logger:  lgr,
 	}
+}
+
+func (h *handler) GetSummary(w http.ResponseWriter, r *http.Request) {
+	res, err := h.service.GetSummary()
+	if err != nil {
+		h.logger.Error("handler.go", "GetSummary", err.Error())
+		statusCode, body := errors.CreateResponse(err)
+		makeHttpRensponse(w, statusCode, body)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(res)
+	if err != nil {
+		h.logger.Error("handler.go", "RegisterPayment", err.Error())
+		statusCode, body := errors.CreateResponse(errors.NewBadRequest("bad request: decoding body"))
+		makeHttpRensponse(w, statusCode, body)
+		return
+	}
+	w.WriteHeader(200)
 }
 
 func (h *handler) RegisterPayment(w http.ResponseWriter, r *http.Request) {

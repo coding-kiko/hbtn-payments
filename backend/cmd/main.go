@@ -30,6 +30,7 @@ var (
 	ReceiptsFolderPath  = os.Getenv("RECEIPTS_FOLDER_PATH")
 	RegisterPaymentpath = os.Getenv("REGISTER_PAYMENT_PATH")
 	GetSummaryPath      = os.Getenv("GET_SUMMARY_PATH")
+	StaticServerBaseUrl = os.Getenv("STATIC_SERVER_BASE_URL")
 )
 
 func main() {
@@ -54,7 +55,7 @@ func main() {
 
 	emailClient := email.NewEmailClient(EmailPwd)
 
-	service := service.NewService(emailClient, logger, repository)
+	service := service.NewService(emailClient, logger, repository, StaticServerBaseUrl)
 
 	handlers := transport.NewHandler(service, logger)
 
