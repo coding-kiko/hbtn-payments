@@ -85,7 +85,7 @@ func (c *Client) EventHandler(evt interface{}) {
 				return
 			}
 
-			match, _ := regexp.MatchString(`[0-1][1-9]/[0-9]{4}`, month)
+			match, _ := regexp.MatchString(`[0-1][0-9]/[0-9]{4}`, month)
 			if !match {
 				c.SendMessage("<BOT> Please match the format 'MM/YYYY'")
 				return
