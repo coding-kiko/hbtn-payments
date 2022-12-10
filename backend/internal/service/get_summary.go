@@ -37,8 +37,7 @@ func GenerateHtmlSummaryBase64(payments []entity.Payment, staticServerBaseUrl st
 		row := fmt.Sprintf(dynamicRow, payment.Month, payment.Amount, payment.Company, staticServerBaseUrl+payment.Receipt)
 		file.WriteString(row)
 	}
-	fixedBot = fmt.Sprintf(fixedBot, total)
-	file.WriteString(fixedBot)
+	file.WriteString(fmt.Sprintf(fixedBot, total))
 
 	fileBase64 := enc.StdEncoding.EncodeToString(file.Bytes())
 
