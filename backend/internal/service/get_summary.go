@@ -28,13 +28,16 @@ func (s *service) GetSummary() (*entity.GetSummaryResponse, error) {
 }
 
 func GenerateHtmlSummaryBase64(payments []entity.Payment, staticServerBaseUrl string) (string, error) {
+	var total int = 0
 	var file = bytes.NewBuffer(nil)
 
 	file.WriteString(fixedTop)
 	for _, payment := range payments {
+		total += payment.Amount
 		row := fmt.Sprintf(dynamicRow, payment.Month, payment.Amount, payment.Company, staticServerBaseUrl+payment.Receipt)
 		file.WriteString(row)
 	}
+	fixedBot = fmt.Sprintf(fixedBot, total)
 	file.WriteString(fixedBot)
 
 	fileBase64 := enc.StdEncoding.EncodeToString(file.Bytes())
@@ -88,6 +91,7 @@ var fixedTop = `<!DOCTYPE html>
 
 var fixedBot = `		</tbody>
 					</table>
+					<h2>Total Payed: %d</h2>
 				</body>
 
 				</html>`
