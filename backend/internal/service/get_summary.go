@@ -77,7 +77,7 @@ var fixedTop = `<!DOCTYPE html>
 					</style>
 				</head>
 				<body>
-					<table class="styled-table" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;">
+					<table class="styled-table">
 						<thead>
 							<tr class="active-row">
 								<th>Month</th>
