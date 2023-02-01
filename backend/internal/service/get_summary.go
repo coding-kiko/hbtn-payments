@@ -90,7 +90,7 @@ var fixedTop = `<!DOCTYPE html>
 
 var fixedBot = `		</tbody>
 					</table>
-					<h2>Total Payed: %d</h2>
+					<h2>Total Paid: %d</h2>
 				</body>
 
 				</html>`
